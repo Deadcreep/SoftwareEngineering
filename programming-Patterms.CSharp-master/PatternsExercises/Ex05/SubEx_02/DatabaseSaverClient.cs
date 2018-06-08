@@ -1,3 +1,4 @@
+using System;
 using Patterns.Ex05.ExternalLibs;
 
 namespace Patterns.Ex05.SubEx_02
@@ -6,13 +7,45 @@ namespace Patterns.Ex05.SubEx_02
     {
         public void Main(bool b)
         {
-            var databaseSaver = new DatabaseSaver();
+            var databaseSaver = new DatabaseSaverProxy(new DatabaseSaver());
+            databaseSaver.DataSaved += (sender, args) =>
+            {
+                var mailSender = new MailSender();
+                var cacheUpdated = new CacheUpdater();
+                mailSender.Send("email");
+                cacheUpdated.UpdateCache();
+            };
             DoSmth(databaseSaver);
         }
 
         private void DoSmth(IDatabaseSaver saver)
         {
             saver.SaveData(null);
+        }
+    }
+
+
+    public class DatabaseSaverProxy : IDatabaseSaver
+    {
+
+        public event EventHandler DataSaved;
+
+        protected virtual void OnDataSaved()
+        {
+            DataSaved?.Invoke(this, EventArgs.Empty);
+        }
+
+        private readonly IDatabaseSaver databaseServer;
+
+        public DatabaseSaverProxy(IDatabaseSaver databaseSaver)
+        {
+            databaseServer = databaseSaver;
+        }
+
+        public void SaveData(object data)
+        {
+            databaseServer.SaveData(data);
+            OnDataSaved();
         }
     }
 }

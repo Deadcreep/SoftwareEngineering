@@ -5,7 +5,7 @@ using Patterns.Ex01.ExternalLibs.Twitter;
 
 namespace Patterns.Ex02
 {
-    public class TwitterUserService
+    public class TwitterUserService: UserService<TwitterUser>
     {
         readonly TwitterClient _client = new TwitterClient();
 
@@ -15,34 +15,35 @@ namespace Patterns.Ex02
         /// </summary>
         /// <param name="pageUrl"></param>
         /// <returns></returns>
-        public UserInfo GetUserInfo(String pageUrl)
+        protected override UserInfo[] ConvertToUserInfo(TwitterUser[] user)
+        {
+            return user.Select(c =>
+            {
+                var userInfo = new UserInfo
+                {
+                    UserId = c.UserId.ToString(),
+                    Name = _client.GetUserNameById(c.UserId)
+                };
+                return userInfo;
+            }).ToArray();
+        }
+
+        protected override string Parse(string pageUrl)
         {
             var regex = new Regex("twitter.com/(.*)");
             var userName = regex.Match(pageUrl).Groups[0].Value;
+            return GetUserId(userName).ToString();
+        }
 
-            var userId = GetUserId(userName);
 
-            TwitterUser[] subscribers = _client.GetSubscribers(userId);
+        protected override TwitterUser[] GetFriendsById(string userId)
+        {
+            return _client.GetSubscribers(Convert.ToInt64(userId)).ToArray();
+        }
 
-            UserInfo[] friends = subscribers
-                .Select(c =>
-                {
-                    UserInfo userInfo = new UserInfo
-                    {
-                        UserId = c.UserId.ToString(),
-                        Name = _client.GetUserNameById(c.UserId)
-                    };
-                    return userInfo;
-                })
-                .ToArray();
-
-            var result = new UserInfo
-            {
-                Name = userName,
-                UserId = userId.ToString(),
-                Friends = friends
-            };
-            return result;
+        protected override string GetName(string userId)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

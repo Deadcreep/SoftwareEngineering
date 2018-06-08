@@ -51,19 +51,18 @@
     <Compile Include="Ex01\ExternalLibs\Instagram\InstagramUser.cs" />
     <Compile Include="Ex01\ExternalLibs\Twitter\TwitterClient.cs" />
     <Compile Include="Ex01\ExternalLibs\Twitter\TwitterUser.cs" />
-    <Compile Include="Ex01\ISociaNetwork.cs" />
     <Compile Include="Ex01\SocialNetwork.cs" />
     <Compile Include="Ex01\SocialNetworkUser.cs" />
     <Compile Include="Ex01\SubscriberViewer.cs" />
     <Compile Include="Ex02\TwitterUserService.cs" />
     <Compile Include="Ex02\UserInfo.cs" />
+    <Compile Include="Ex02\UserService.cs" />
     <Compile Include="Ex02\VkUser.cs" />
     <Compile Include="Ex02\VkUserService.cs" />
     <Compile Include="Ex05\ExternalLibs\CacheUpdater.cs" />
     <Compile Include="Ex05\SubEx_01\DatabaseSaverClient.cs" />
     <Compile Include="Ex05\ExternalLibs\DatabaseSaver.cs" />
     <None Include="Ex05\SubEx_01\description.txt" />
-    <Compile Include="Ex05\SubEx_01\DatabaseSaverProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
